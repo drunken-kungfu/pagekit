@@ -58,9 +58,10 @@ class PackageManager
 
     /**
      * @param  array $uninstall
+     * @param  bool $removeDir
      * @return bool
      */
-    public function uninstall($uninstall)
+    public function uninstall($uninstall, $removeDir = true)
     {
         foreach ((array) $uninstall as $name) {
             if (!$package = App::package($name)) {
@@ -78,10 +79,12 @@ class PackageManager
                     throw new \RuntimeException(__('Package path is missing.'));
                 }
 
-                $this->output->writeln(__("Removing package folder."));
+                if ($removeDir) {
+                    $this->output->writeln(__("Removing package folder."));
 
-                App::file()->delete($path);
-                @rmdir(dirname($path));
+                    App::file()->delete($path);
+                    @rmdir(dirname($path));
+                }
             }
         }
     }
